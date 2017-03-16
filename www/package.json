@@ -1,0 +1,13 @@
+{
+  "name": "YaPa",
+  "version": "0.0.1",
+  "description": "Yet another Pomodoro App",
+  "main": "index.html",
+  "repository": "https://github.com/taophp/yapa.git",
+  "author": "Stéphane Mourey",
+  "license": "AGPL-3.0",
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.1.1"
+  }
+}
