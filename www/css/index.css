@@ -32,10 +32,11 @@ body {
 	justify-content:space-around;
 }
 .green {color:#00ff80;}
-.title h1 {font-size:8vh;}
-.title h2 small {font-size:5vh;}
+.title h1 {font-size:7vh;margin-bottom:0;padding-bottom:0;}
+.title h2 small {font-size:4vh;}
+.pomodoro {font-size:5vh;}
 #chrono {font-size:13vh;display:block;}
-#mainpomodoro {font-size:23vh;color:#00ff80;display:block;margin-top:2vh;}
+#mainpomodoro {font-size:20vh;color:#00ff80;display:block;margin-top:2vh;}
 .buttons {display:flex;justify-content:space-around;flex-wrap:wrap;}
-.buttons button {font-size:3vh;max-width:33vw;min-width:26vw;padding: .5em;}
-.buttons button.next{background-color:#d44;color:#fff;}
+.buttons button {font-size:3vh;max-width:33vw;min-width:26vw;padding:.5em;margin:.5em;}
+.buttons button.next{border: #f00 solid 2px;}
