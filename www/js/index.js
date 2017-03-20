@@ -1,44 +1,17 @@
 var app = {
-	// Application Constructor
 	initialize: function() {
+		app.config = {
+			'workflow':'pspspspl',
+			'pomodoroDuration':25,
+			'shortPauseDuration':1,
+			'longPauseDuration':15
+		};
 		app.states = {
-			'pomodoro': {'length':25*60*1000,'displayedStatus':'Work hard now !'},
-			'shortPause': {'length':5*60*1000,'displayedStatus':'You deserve a short break...'},
-			'longPause': {'length':15*60*1000,'displayedStatus':'You deserve a long break...'}
+			'pomodoro': {'length':app.config.pomodoroDuration*60*1000,'displayedStatus':'Work hard now !'},
+			'shortPause': {'length':app.config.shortPauseDuration*60*1000,'displayedStatus':'You deserve a short break...'},
+			'longPause': {'length':app.config.longPauseDuration*60*1000,'displayedStatus':'You deserve a long break...'}
 		};
-		app.updateTimer = function(){
-			seconds = app.remainingTime/1000;
-			app.minutes = Math.floor(seconds/60);
-			app.seconds = seconds-app.minutes*60;
-		};
-		app.updateTimerUI = function(){
-			seconds = (app.seconds.toString().length>1) ? app.seconds : '0'+app.seconds;
-			$('#chrono').html(app.minutes+':'+seconds);
-			$('#status').html(app.states[app.state]['displayedStatus']);
-		};
-		app.countdown = function(){
-			app.remainingTime-=1000;
-			app.updateTimer();
-			app.updateTimerUI();
-			if (app.remainingTime<=0){
-				app.timeends();
-			}
-		};
-		app.timeends = function(){
-			window.clearInterval(app.countdowner);
-			app.countdowner= false;
-			navigator.vibrate(200);
-			navigator.notification.beep(1);
-			navigator.notification.alert('Time ends... what to do next ?');
-		};
-		app.changeState = function(state){
-			app.state = state;
-			window.clearInterval(app.countdowner);
-			app.remainingTime = app.states[state]['length'];
-			app.updateTimer();
-			app.updateTimerUI();
-			app.countdowner = setInterval(app.countdown,1000);
-		};
+		app.workflowPositions = 0;
 		$('#newBtn').click(function(){app.changeState('pomodoro');});
 		$('#shortPauseBtn').click(function(){app.changeState('shortPause');});
 		$('#longPauseBtn').click(function(){app.changeState('longPause');});
@@ -60,6 +33,42 @@ var app = {
 			navigator.notification.alert('Not yet implemented...',function(){},'WTF?!?');
 		});
 	},
-};
+	changeState: function(state){
+		app.state = state;
+		window.clearInterval(app.countdowner);
+		app.remainingTime = app.states[state]['length'];
+		app.updateTimer();
+		app.updateTimerUI();
+		app.countdowner = setInterval(app.countdown,1000);
+	},
+	updateTimer: function(){
+		seconds = app.remainingTime/1000;
+		app.minutes = Math.floor(seconds/60);
+		app.seconds = seconds-app.minutes*60;
+	},
+	updateTimerUI: function(){
+		seconds = (app.seconds.toString().length>1) ? app.seconds : '0'+app.seconds;
+		$('#chrono').html(app.minutes+':'+seconds);
+		$('#status').html(app.states[app.state]['displayedStatus']);
+		green = Math.floor(app.remainingTime/app.states[app.state]['length']*100);
+		red = 100-green;
+		$('#mainpomodoro').css('color','rgb('+red+'%,'+green+'%,0%)');
+	},
+	countdown: function(){
+		app.remainingTime-=1000;
+		app.updateTimer();
+		app.updateTimerUI();
+		if (app.remainingTime<=0){
+			app.timeends();
+		}
+	},
+	timeends: function(){
+		window.clearInterval(app.countdowner);
+		app.countdowner= false;
+		navigator.vibrate(200);
+		navigator.notification.beep(1);
+		navigator.notification.alert('Time ends... what to do next ?');
+		},
 
+};
 app.initialize();
