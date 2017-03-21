@@ -11,7 +11,7 @@ var app = {
 			'shortPause': {'length':app.config.shortPauseDuration*60*1000,'displayedStatus':'You deserve a short break...'},
 			'longPause': {'length':app.config.longPauseDuration*60*1000,'displayedStatus':'You deserve a long break...'}
 		};
-		app.workflowPositions = 0;
+		app.workflowPosition = 0;
 		$('#newBtn').click(function(){app.changeState('pomodoro');});
 		$('#shortPauseBtn').click(function(){app.changeState('shortPause');});
 		$('#longPauseBtn').click(function(){app.changeState('longPause');});
@@ -68,7 +68,13 @@ var app = {
 		navigator.vibrate(200);
 		navigator.notification.beep(1);
 		navigator.notification.alert('Time ends... what to do next ?');
-		},
-
+		app.workflowPositionIncrement();
+	},
+	workflowPositionIncrement: function(){
+		app.workflowPosition++;
+		console.log(app.config.workflow);
+		console.log(app.config.workflow.length);
+		// if (
+	},
 };
 app.initialize();
