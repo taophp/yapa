@@ -3,7 +3,7 @@ var app = {
 		app.config = {
 			'workflow':'pspspspl',
 			'pomodoroDuration':25,
-			'shortPauseDuration':1,
+			'shortPauseDuration':5,
 			'longPauseDuration':15
 		};
 		app.states = {
@@ -72,9 +72,27 @@ var app = {
 	},
 	workflowPositionIncrement: function(){
 		app.workflowPosition++;
-		console.log(app.config.workflow);
-		console.log(app.config.workflow.length);
-		// if (
+		if (app.workflowPosition >= app.config.workflow.length) {
+			app.workflowPosition = 0;
+		}
+		app.setWorkflowState(app.config.workflow.charAt(app.workflowPosition));
 	},
+	setWorkflowState: function(state){
+		$('.buttons button').removeClass('next');
+		switch(state){
+			case 'p':
+				$('#newBtn').addClass('next');
+				break;
+			case 's':
+				$('#shortPauseBtn').addClass('next');
+				break;
+			case 'l':
+				$('#LongPauseBtn').addClass('next');
+				break;
+			default:
+				throw "Workflow broken, undefined state.";
+				break;
+		}
+	}
 };
 app.initialize();
