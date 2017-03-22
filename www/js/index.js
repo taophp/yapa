@@ -2,16 +2,18 @@ var app = {
 	initialize: function() {
 		app.config = {
 			'workflow':'pspspspl',
-			'pomodoroDuration':25,
-			'shortPauseDuration':5,
-			'longPauseDuration':15
+			'pomodoroDuration':.25,
+			'shortPauseDuration':.25,
+			'longPauseDuration':.15
 		};
 		app.states = {
-			'pomodoro': {'length':app.config.pomodoroDuration*60*1000,'displayedStatus':'Work hard now !'},
-			'shortPause': {'length':app.config.shortPauseDuration*60*1000,'displayedStatus':'You deserve a short break...'},
-			'longPause': {'length':app.config.longPauseDuration*60*1000,'displayedStatus':'You deserve a long break...'}
+			'pomodoro': {'length':app.config.pomodoroDuration*60*1000,'displayedStatus':'Work hard now !','nextStepMsgs':'Working hard !'},
+			'shortPause': {'length':app.config.shortPauseDuration*60*1000,'displayedStatus':'You deserve a short break...','nextStepMsg':'Take a short break ?'},
+			'longPause': {'length':app.config.longPauseDuration*60*1000,'displayedStatus':'You deserve a long break...','nextStepMsg':'Take a LONG break !'}
 		};
 		app.workflowPosition = 0;
+		app.state = 'pomodoro';
+		app.nextMsg = '';
 		$('#newBtn').click(function(){app.changeState('pomodoro');});
 		$('#shortPauseBtn').click(function(){app.changeState('shortPause');});
 		$('#longPauseBtn').click(function(){app.changeState('longPause');});
@@ -32,6 +34,12 @@ var app = {
 		$('#parametersBtn').click(function(e){
 			navigator.notification.alert('Not yet implemented...',function(){},'WTF?!?');
 		});
+	},
+	getNextStateChar: function(position){
+		if (position >= app.config.workflow.length) {
+			position=0;
+		}
+		return app.config.workflow.charAt(position);
 	},
 	changeState: function(state){
 		app.state = state;
@@ -65,6 +73,8 @@ var app = {
 	timeends: function(){
 		window.clearInterval(app.countdowner);
 		app.countdowner= false;
+		subWorkflow = app.config['workflow'].substring(0,app.workflowPosition);
+		navigator.notification.alert(subWorkflow);
 		navigator.vibrate(200);
 		navigator.notification.beep(1);
 		navigator.notification.alert('Time ends... what to do next ?');
