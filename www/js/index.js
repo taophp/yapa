@@ -1,11 +1,11 @@
 var app = {
-	initialize: function() {
-		app.config = {
-			'workflow':'pspspspl',
+	config: {
+			'workflow':'pspl',
 			'pomodoroDuration':.25,
 			'shortPauseDuration':.25,
 			'longPauseDuration':.15
-		};
+	},
+	initialize: function() {
 		app.states = {
 			'pomodoro': {'length':app.config.pomodoroDuration*60*1000,'displayedStatus':'Work hard now !','nextStepMsgs':'Working hard !'},
 			'shortPause': {'length':app.config.shortPauseDuration*60*1000,'displayedStatus':'You deserve a short break...','nextStepMsg':'Take a short break ?'},
@@ -14,6 +14,13 @@ var app = {
 		app.workflowPosition = 0;
 		app.state = 'pomodoro';
 		app.nextMsg = '';
+		numberOfPom = (app.config.workflow.match(/p/g) || []).length;
+		pomsHtml='';
+		for(i=1;i<=numberOfPom;i++) {
+			pomsHtml+='<span id="pomo'+i+'" class="green pomodoro glyphicon glyphicon-apple" aria-label="Pomodoro"></span>';
+		}
+		console.log(pomsHtml);
+		$('#littlePoms').html(pomsHtml);
 		$('#newBtn').click(function(){app.changeState('pomodoro');});
 		$('#shortPauseBtn').click(function(){app.changeState('shortPause');});
 		$('#longPauseBtn').click(function(){app.changeState('longPause');});
@@ -57,6 +64,7 @@ var app = {
 	updateTimerUI: function(){
 		seconds = (app.seconds.toString().length>1) ? app.seconds : '0'+app.seconds;
 		$('#chrono').html(app.minutes+':'+seconds);
+		document.title = app.minutes+':'+seconds;
 		$('#status').html(app.states[app.state]['displayedStatus']);
 		green = Math.floor(app.remainingTime/app.states[app.state]['length']*100);
 		red = 100-green;
@@ -73,12 +81,18 @@ var app = {
 	timeends: function(){
 		window.clearInterval(app.countdowner);
 		app.countdowner= false;
+		app.workflowPositionIncrement();
+		$('#status').html(app.states[app.state]['displayedStatus']);
 		subWorkflow = app.config['workflow'].substring(0,app.workflowPosition);
-		navigator.notification.alert(subWorkflow);
+		numberOfPom = (subWorkflow.match(/p/g) || []).length;
+		$('.pomodoro').removeClass('red');
+		for (i=1;i<=numberOfPom;i++) {
+			$('#pomo'+i).removeClass('green');
+			$('#pomo'+i).addClass('red');
+		}
 		navigator.vibrate(200);
 		navigator.notification.beep(1);
 		navigator.notification.alert('Time ends... what to do next ?');
-		app.workflowPositionIncrement();
 	},
 	workflowPositionIncrement: function(){
 		app.workflowPosition++;
@@ -106,3 +120,13 @@ var app = {
 	}
 };
 app.initialize();
+
+if (typeof navigator.notification == 'undefined') {
+	navigator.notification = {
+		'alert': function(arg){alert(arg);},
+		'beep': function(arg){console.log('Beep: '+arg);}
+	}
+}
+if (typeof navigator.vibrate == 'undefined') {
+	navigator.vibrate = function(arg){console.log('Vibrate: '+arg);};
+}

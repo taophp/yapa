@@ -32,7 +32,8 @@ body {
 	flex-direction:column;
 	justify-content:space-around;
 }
-.green {color:#00ff80;}
+.green {color:#0f8;}
+.red {color:#f08;}
 .title h1 {font-size:7vh;margin-bottom:0;padding-bottom:0;margin-top:1vh;line-height:1;}
 .pomodoro {font-size:5vh;}
 #chrono {font-size:13vh;display:block;}
