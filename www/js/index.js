@@ -1,9 +1,9 @@
 var app = {
 	config: {
-			'workflow':'pspl',
-			'pomodoroDuration':.25,
-			'shortPauseDuration':.25,
-			'longPauseDuration':.15
+			'workflow':'pspspspl',
+			'pomodoroDuration':25,
+			'shortPauseDuration':5,
+			'longPauseDuration':15
 	},
 	initialize: function() {
 		app.states = {
@@ -19,7 +19,6 @@ var app = {
 		for(i=1;i<=numberOfPom;i++) {
 			pomsHtml+='<span id="pomo'+i+'" class="green pomodoro glyphicon glyphicon-apple" aria-label="Pomodoro"></span>';
 		}
-		console.log(pomsHtml);
 		$('#littlePoms').html(pomsHtml);
 		$('#newBtn').click(function(){app.changeState('pomodoro');});
 		$('#shortPauseBtn').click(function(){app.changeState('shortPause');});
@@ -41,6 +40,7 @@ var app = {
 		$('#parametersBtn').click(function(e){
 			navigator.notification.alert('Not yet implemented...',function(){},'WTF?!?');
 		});
+		$('#newBtn').focus();
 	},
 	getNextStateChar: function(position){
 		if (position >= app.config.workflow.length) {
@@ -86,6 +86,7 @@ var app = {
 		subWorkflow = app.config['workflow'].substring(0,app.workflowPosition);
 		numberOfPom = (subWorkflow.match(/p/g) || []).length;
 		$('.pomodoro').removeClass('red');
+		$('.pomodoro').addClass('green');
 		for (i=1;i<=numberOfPom;i++) {
 			$('#pomo'+i).removeClass('green');
 			$('#pomo'+i).addClass('red');
@@ -106,12 +107,15 @@ var app = {
 		switch(state){
 			case 'p':
 				$('#newBtn').addClass('next');
+				$('#newBtn').focus();
 				break;
 			case 's':
 				$('#shortPauseBtn').addClass('next');
+				$('#shortPauseBtn').focus();
 				break;
 			case 'l':
-				$('#LongPauseBtn').addClass('next');
+				$('#longPauseBtn').addClass('next');
+				$('#longPauseBtn').focus();
 				break;
 			default:
 				throw "Workflow broken, undefined state.";
